@@ -32,7 +32,7 @@ public class CodeLineCountHelper {
             return cache.get(file.getAbsolutePath());
         }
 
-        // TODO reading by line may not be best approach when working with big files, however java sources should never be
+        // TODO reading by line may not be best approach when working with big files, but java sources should never be
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int count = 0;
             boolean stringLiteralOpen = false;
@@ -71,10 +71,10 @@ public class CodeLineCountHelper {
                         }
                         continue;
                     }
-                    if (!stringLiteralOpen && chars[i] == '/' && chars[i - 1] == '/') { // is *// situation even possible?
+                    if (!stringLiteralOpen && chars[i] == '/' && chars[i - 1] == '/') {
                         break;
                     }
-                    if (chars[i] == '"' && chars[i - 1] != '\\' && chars[i - 1] != '\'') {  // + avoid chars and escaped strings
+                    if (chars[i] == '"' && chars[i - 1] != '\\' && chars[i - 1] != '\'') {  // + avoid chars and \"
                         stringLiteralOpen = !stringLiteralOpen;
                         increase = true;
                         continue;

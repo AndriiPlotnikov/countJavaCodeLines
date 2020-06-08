@@ -1,6 +1,9 @@
 package com.sarief;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Main class
@@ -22,10 +25,11 @@ public class Application {
 
         if (dirOrFile.exists()) {
             if (dirOrFile.isDirectory()) {
-                System.out.println(dirOrFile.getName() + " : " + FileHelper.recursiveCalc(dirOrFile.listFiles(), 0));
-                FileHelper.recursivePrintv2(dirOrFile.listFiles(), 0, 1);// ignore warning, cannot be null if isDirectory
+                System.out.println(dirOrFile.getName() + " : " +
+                        FileHelper.recursiveCalc(dirOrFile.listFiles(), 0));
+                FileHelper.recursivePrintv2(dirOrFile.listFiles(), 0, 1); // ignore warning, cannot be null
             } else {
-                System.out.println(dirOrFile.getName()+ " : " + CodeLineCountHelper.countCodeLines(dirOrFile));
+                System.out.println(dirOrFile.getName() + " : " + CodeLineCountHelper.countCodeLines(dirOrFile));
             }
         } else {
             System.out.println("Error: \"" + path + "\" dir or file does not exist");

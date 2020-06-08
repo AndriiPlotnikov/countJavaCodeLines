@@ -53,6 +53,14 @@ public class FileHelper {
         recursivePrintv2(files, index, level);
     }
 
+    /**
+     * recursively calculate number of lines in files and subfolders
+     *
+     * @param files list of files and subfolders
+     * @param index recursion index
+     * @return number of lines sum
+     * @throws IOException in case of error of read
+     */
     public static int recursiveCalc(File[] files, int index) throws IOException {
         // terminate condition
         if (index == files.length) {
