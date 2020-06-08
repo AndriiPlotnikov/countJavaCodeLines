@@ -4,51 +4,52 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 public class CodeLineCountHelperTest {
 
     @Test
-    public void countLines_oddFile_countsProperly() {
-        String expected = Integer.toString(16);
-        File file = new File("resources\\test.java");
-        String lines = CodeLineCountHelper.countLines(file);
+    public void countLines_oddFile_countsProperly() throws IOException {
+        int expected = 16;
+        File file = new File("resources\\tests2\\test.java");
+        int lines = CodeLineCountHelper.countCodeLines(file);
 
         Assert.assertEquals(expected, lines);
     }
 
     @Test
-    public void countLines_commentedLines_noLineCounted() {
-        String expected = Integer.toString(0);
-        File file = new File("resources\\commented.java");
-        String lines = CodeLineCountHelper.countLines(file);
+    public void countLines_commentedLines_noLineCounted() throws IOException {
+        int expected = 0;
+        File file = new File("resources\\tests\\commented.java");
+        int lines = CodeLineCountHelper.countCodeLines(file);
 
         Assert.assertEquals(expected, lines);
     }
 
     @Test
-    public void countLines_emptyFile_noLineCounted() {
-        String expected = Integer.toString(0);
-        File file = new File("resources\\empty.java");
-        String lines = CodeLineCountHelper.countLines(file);
+    public void countLines_emptyFile_noLineCounted() throws IOException {
+        int expected = 0;
+        File file = new File("resources\\tests\\inner\\empty.java");
+        int lines = CodeLineCountHelper.countCodeLines(file);
 
         Assert.assertEquals(expected, lines);
     }
 
 
     @Test
-    public void countLines_whitespaceFile_noLineCounted() {
-        String expected = Integer.toString(0);
-        File file = new File("resources\\whitespace.java");
-        String lines = CodeLineCountHelper.countLines(file);
+    public void countLines_whitespaceFile_noLineCounted() throws IOException {
+        int expected = 0;
+        File file = new File("resources\\tests\\whitespace.java");
+        int lines = CodeLineCountHelper.countCodeLines(file);
 
         Assert.assertEquals(expected, lines);
     }
 
     @Test
-    public void countLines_oneCharacterLinesFile_allLinesCounted() {
-        String expected = Integer.toString(8);
-        File file = new File("resources\\oneCharLine.java");
-        String lines = CodeLineCountHelper.countLines(file);
+    public void countLines_oneCharacterLinesFile_allLinesCounted() throws IOException {
+        int expected = 8;
+        File file = new File("resources\\tests\\oneCharLine.java");
+        int lines = CodeLineCountHelper.countCodeLines(file);
 
         Assert.assertEquals(expected, lines);
     }

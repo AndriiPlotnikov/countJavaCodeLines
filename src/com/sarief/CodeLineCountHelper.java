@@ -4,29 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Code line counter helper
  */
 public class CodeLineCountHelper {
 
-    private CodeLineCountHelper(){}
+    private static Map<String, Integer> cache = new HashMap<>();
 
-    /**
-     * count lines in file
-     * <p>
-     * wrapper for countCodeLines to avoid IOException
-     *
-     * @param file file tha requires counting
-     * @return number of lines as String or "N/A" if exception occured
-     */
-    public static String countLines(File file) {
-        try {
-            return countCodeLines(file);
-        } catch (IOException e) {
-            return "N/A";
-        }
-    }
+    private CodeLineCountHelper(){}
 
     /**
      * count code lines in file
@@ -39,7 +27,11 @@ public class CodeLineCountHelper {
      * @return code lines
      * @throws IOException if error occurred during file reading
      */
-    public static String countCodeLines(File file) throws IOException {
+    public static int countCodeLines(File file) throws IOException {
+        if (cache.containsKey(file.getAbsolutePath())) {
+            return cache.get(file.getAbsolutePath());
+        }
+
         // TODO reading by line may not be best approach when working with big files, however java sources should never be
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int count = 0;
@@ -99,7 +91,8 @@ public class CodeLineCountHelper {
                     count++;
                 }
             }
-            return Integer.toString(count);
+            cache.put(file.getAbsolutePath(), count);
+            return count;
         }
     }
 }

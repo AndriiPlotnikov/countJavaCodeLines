@@ -1,11 +1,16 @@
 package com.sarief;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Helper for file operations
  */
 public class FileHelper {
+
+    private static Map<String, Integer> cache = new HashMap<>();
 
     private FileHelper(){}
 
@@ -19,7 +24,7 @@ public class FileHelper {
      * @param index index of file to start with
      * @param level depth of recursion (for tabs)
      */
-    public static void recursivePrint(File[] files, int index, int level) {
+    public static void recursivePrintv2(File[] files, int index, int level) throws IOException {
         // terminate condition
         if (index == files.length) {
             return;
@@ -30,32 +35,46 @@ public class FileHelper {
             System.out.print(TAB_CHARACTER);
         }
 
-        // for files
-        File file = files[index];
-        if (files[index].isFile()) {
-            System.out.println(getFileNameAndCodeLines(file));
-        } else if (files[index].isDirectory()) { // for sub-directories
-            System.out.println("[" + file.getName() + "]");
+        if (files[index].isFile()) {// for files
+            File file = files[index];
+            int codeLines = CodeLineCountHelper.countCodeLines(file);
+            System.out.println(file.getName() + " : " + codeLines);
 
-            // recursion for sub-directories
+        } else if (files[index].isDirectory()) { // for sub-directories
+            File directory = files[index]; //
+
             // ignore warning, cannot be null if isDirectory()
-            recursivePrint(file.listFiles(), 0, level + 1);
+            int lines = recursiveCalc(directory.listFiles(), 0);
+            System.out.println(directory.getName() + " : " + lines);
+            recursivePrintv2(directory.listFiles(), 0, level + 1);
         }
 
-        // recursion for main directory
-        recursivePrint(files, ++index, level);
+        index++;
+        recursivePrintv2(files, index, level);
     }
 
+    public static int recursiveCalc(File[] files, int index) throws IOException {
+        // terminate condition
+        if (index == files.length) {
+            return 0;
+        }
 
-    /**
-     * extract file name and number of code lines
-     *
-     * {@see CodeLineCountHelper}
-     *
-     * @param file file to extract name & code lines from
-     * @return name and code lines
-     */
-    public static String getFileNameAndCodeLines(File file) {
-        return file.getName() + " : " + CodeLineCountHelper.countLines(file);
+        int lines = 0;
+        if (files[index].isFile()) {// for files
+            File file = files[index];
+            lines = CodeLineCountHelper.countCodeLines(file);
+        } else if (files[index].isDirectory()) { // for sub-directories
+            File directory = files[index]; //
+            if (cache.containsKey(directory.getAbsolutePath())) {
+                lines = cache.get(directory.getAbsolutePath());
+            } else {
+                // ignore warning, cannot be null if isDirectory()
+                lines = recursiveCalc(directory.listFiles(), 0);
+                cache.put(directory.getAbsolutePath(), lines);
+            }
+        }
+
+        index++;
+        return lines + recursiveCalc(files, index);
     }
 }

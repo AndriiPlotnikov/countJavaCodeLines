@@ -18,13 +18,14 @@ public class Application {
         String path = reader.readLine();
         System.out.println("Input is: " + path);
 
-        File mainDir = new File(path);
+        File dirOrFile = new File(path);
 
-        if (mainDir.exists()) {
-            if (mainDir.isDirectory()) {
-                FileHelper.recursivePrint(mainDir.listFiles(), 0, 0); // ignore warning, cannot be null if isDirectory
+        if (dirOrFile.exists()) {
+            if (dirOrFile.isDirectory()) {
+                System.out.println(dirOrFile.getName() + " : " + FileHelper.recursiveCalc(dirOrFile.listFiles(), 0));
+                FileHelper.recursivePrintv2(dirOrFile.listFiles(), 0, 1);// ignore warning, cannot be null if isDirectory
             } else {
-                System.out.println(FileHelper.getFileNameAndCodeLines(mainDir));
+                System.out.println(dirOrFile.getName()+ " : " + CodeLineCountHelper.countCodeLines(dirOrFile));
             }
         } else {
             System.out.println("Error: \"" + path + "\" dir or file does not exist");
